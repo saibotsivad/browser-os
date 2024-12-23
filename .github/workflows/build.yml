@@ -17,7 +17,11 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y alpine-sdk xorriso syslinux
+          sudo apt-get install -y \
+            curl \
+            xorriso \
+            syslinux-utils \
+            genisoimage
 
       - name: Download mkimage.sh
         run: |
