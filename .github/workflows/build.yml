@@ -1,0 +1,44 @@
+name: Build BrowserOS ISO
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch: # allow manual trigger
+
+jobs:
+  build-browser-os:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y alpine-sdk xorriso syslinux
+
+      - name: Download mkimage.sh
+        run: |
+          curl -O https://raw.githubusercontent.com/alpinelinux/alpine-conf/master/mkimage.sh
+          chmod +x mkimage.sh
+          mv mkimage.sh build/mkimage.sh
+
+      - name: Build custom Alpine ISO
+        run: |
+          mkdir -p build/output
+          ./build/mkimage.sh \
+            --profile standard \
+            --outdir ./build/output \
+            --arch x86_64 \
+            --overlay ./build/overlay \
+            --packages "chromium openrc" \
+            --script-chroot \
+            --apks ./build/index.html
+
+      - name: Upload ISO Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: custom-alpine-iso
+          path: build/output/*.iso
