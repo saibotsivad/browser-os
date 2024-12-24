@@ -14,22 +14,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Alpine in Docker
-        uses: docker://alpine:latest
-        with:
-          entrypoint: ""
+      - name: Set up Docker container
         run: |
-          apk add --no-cache alpine-sdk xorriso syslinux genisoimage
-          wget https://raw.githubusercontent.com/alpinelinux/aports/master/scripts/mkimage.sh -O /build/mkimage.sh
-          chmod +x /build/mkimage.sh
-          mkdir -p /build/output
-          ./build/mkimage.sh \
-            --profile standard \
-            --outdir /build/output \
-            --arch x86_64 \
-            --overlay /build/overlay \
-            --packages "chromium openrc"
-
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            alpine:latest \
+            sh -c "
+              apk add --no-cache alpine-sdk xorriso syslinux genisoimage curl;
+              curl -O https://raw.githubusercontent.com/alpinelinux/aports/master/scripts/mkimage.sh;
+              chmod +x mkimage.sh;
+              mkdir -p output;
+              ./mkimage.sh --profile standard --outdir ./output --arch x86_64 --overlay ./overlay --packages 'chromium openrc';
+            "
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
         with:
