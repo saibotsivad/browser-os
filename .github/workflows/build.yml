@@ -25,7 +25,7 @@ jobs:
 
       - name: Download mkimage.sh
         run: |
-          curl -O https://raw.githubusercontent.com/alpinelinux/alpine-conf/master/mkimage.sh
+          curl -O https://raw.githubusercontent.com/alpinelinux/aports/master/scripts/mkimage.sh
           chmod +x mkimage.sh
           mv mkimage.sh build/mkimage.sh
 
