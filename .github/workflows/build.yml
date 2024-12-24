@@ -1,48 +1,37 @@
-name: Build BrowserOS ISO
+name: Build Custom Alpine ISO
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  workflow_dispatch: # allow manual trigger
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual triggers
 
 jobs:
-  build-browser-os:
-    runs-on: ubuntu-latest
+  build-alpine:
+    runs-on: ubuntu-latest # Default GitHub-hosted runner
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Run Alpine in Docker
+        uses: docker://alpine:latest
+        with:
+          entrypoint: ""
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            curl \
-            xorriso \
-            syslinux-utils \
-            genisoimage
-
-      - name: Download mkimage.sh
-        run: |
-          curl -O https://raw.githubusercontent.com/alpinelinux/aports/master/scripts/mkimage.sh
-          chmod +x mkimage.sh
-          mv mkimage.sh build/mkimage.sh
-
-      - name: Build custom Alpine ISO
-        run: |
-          mkdir -p build/output
+          apk add --no-cache alpine-sdk xorriso syslinux genisoimage
+          wget https://raw.githubusercontent.com/alpinelinux/aports/master/scripts/mkimage.sh -O /build/mkimage.sh
+          chmod +x /build/mkimage.sh
+          mkdir -p /build/output
           ./build/mkimage.sh \
             --profile standard \
-            --outdir ./build/output \
+            --outdir /build/output \
             --arch x86_64 \
-            --overlay ./build/overlay \
-            --packages "chromium openrc" \
-            --script-chroot \
-            --apks ./build/index.html
+            --overlay /build/overlay \
+            --packages "chromium openrc"
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
         with:
           name: custom-alpine-iso
-          path: build/output/*.iso
+          path: /build/output/*.iso
