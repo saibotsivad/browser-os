@@ -1,9 +1,9 @@
 name: Build Custom Alpine ISO
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch: # Allows manual triggers
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
             -w /workspace \
             alpine:latest \
             sh -c "
-              apk add --no-cache alpine-sdk xorriso syslinux genisoimage curl;
+              apk add --no-cache alpine-sdk alpine-conf syslinux xorriso squashfs-tools grub grub-efi doas;
               curl -O https://raw.githubusercontent.com/alpinelinux/aports/master/scripts/mkimage.sh;
               chmod +x mkimage.sh;
               mkdir -p output;
