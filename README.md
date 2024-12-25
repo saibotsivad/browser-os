@@ -1,2 +1,33 @@
-# browser-os
-Operating system that's based on XPUD and uses a browser. What am I doing trying to make an OS...
+# BrowserOS
+
+Window management and application development through browsers.
+
+## Using
+
+Go to the releases page and download the ISO.
+
+You can then use it in the normal OS ways, e.g. USB bootup or install.
+
+## Building
+
+You'll first need to install dependencies:
+
+```bash
+./dependencies.sh
+```
+
+Then build it:
+
+```bash
+./build.sh
+```
+
+## Developing
+
+The window management type stuff has a pre-build step before it can be used in the OS.
+
+Most of the "backend" stuff can be emulated reasonably well, so you can probably work on OS code without needing to launch it in a VM, for example:
+
+```bash
+npm run dev
+```

@@ -1,1 +1,9 @@
+# System Fragments
+# ================
+
 .DS_Store
+
+# Dependencies
+# ============
+
+/aports

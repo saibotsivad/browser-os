@@ -1,34 +1,21 @@
-name: Build Custom Alpine ISO
+name: Build BrowserOS ISO
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  workflow_dispatch: # Allows manual triggers
+  workflow_dispatch: # manual trigger
 
 jobs:
   build-alpine:
-    runs-on: ubuntu-latest # Default GitHub-hosted runner
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Set up Docker container
-        run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/workspace \
-            -w /workspace \
-            alpine:latest \
-            sh -c "
-              apk add --no-cache alpine-sdk alpine-conf syslinux xorriso squashfs-tools grub grub-efi doas;
-              curl -O https://raw.githubusercontent.com/alpinelinux/aports/master/scripts/mkimage.sh;
-              chmod +x mkimage.sh;
-              mkdir -p output;
-              ./mkimage.sh --profile standard --outdir ./output --arch x86_64 --overlay ./overlay --packages 'chromium openrc';
-            "
-      - name: Upload ISO Artifact
+      - name: Fetch Dependencies
+        run: ./dependencies.sh
+      - name: Build BrowserOS
+        run: ./build.sh
+      - name: Upload ISO
         uses: actions/upload-artifact@v4
         with:
-          name: custom-alpine-iso
+          name: browseros
           path: /build/output/*.iso
