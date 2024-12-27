@@ -10,6 +10,8 @@ You can then use it in the normal OS ways, e.g. USB bootup or install.
 
 ## Building
 
+If building in a container, make sure your disk is large enough. You'll probably need 2GB or more.
+
 You'll first need to install dependencies:
 
 ```bash
