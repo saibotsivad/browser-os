@@ -26,7 +26,9 @@ Then build it:
 
 ## Developing
 
-Initial development used the [Alpine wiki instructions](https://wiki.alpinelinux.org/wiki/How_to_make_a_custom_ISO_image_with_mkimage), any changes made to the build should be considered for updating the upstream wiki.
+Initial development used the [Alpine wiki instructions](https://wiki.alpinelinux.org/wiki/How_to_make_a_custom_ISO_image_with_mkimage), which references the [alpine/aports](https://gitlab.alpinelinux.org/alpine/aports) repository (Gitlab).
+
+Consider whether any changes made to the build are candidates for contributing to the upstream wiki or repo.
 
 The window management type stuff has a pre-build step before it can be used in the OS.
 
